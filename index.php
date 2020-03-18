@@ -281,96 +281,30 @@ Copyright: © 2020
 					function check_paysolutions_response()
 					{
 
-							$msg['class']   = 'error';
-							$msg['message'] = "Thank you for shopping with us. However, the transaction has been declined.";
+						http_response_code(200);
 
-							$tid =false;
+						if(isset($_REQUEST['refno'])) {
+							$req_order_id = intval($_REQUEST['refno']);
+							$order = wc_get_order($req_order_id);
 
-						
-							if(isset($_REQUEST['refno'])) {
-								$tid = intval($_REQUEST['refno']);
-								$total = (float)$_REQUEST['total'];
-								$notify_request = false;
+							if($order && $order -> get_status() !=='completed' && $order -> get_status() !=='processing') {
+								$order_id = $order->get_id();
+								update_post_meta( $order_id, 'paysolutions_tid', $req_order_id );
+
+								$order -> payment_complete();
+								$order -> add_order_note('Paysolutions payment successful<br/>Paysolutions Ref Number: '.$_REQUEST['refno']);
+								$woocommerce -> cart -> empty_cart();
+								die(print_r($_REQUEST));
+	
+
+							} else {
+								die(print_r($_REQUEST));
 							}
 
-							// notify URL
-							if($tid)
-							{
-
-								$order = false;
-								$order_id = $tid;
-								if ($order_id)
-								{
-										$order = wc_get_order($order_id);
-										$the_order_total = $order->get_total();
-
-								}
-								if ($order)
-								{							
-
-										if ($total)
-										{
-
-											$msg['message'] = "Thank you for shopping with us. Your account has been charged and your transaction is successful. We will be shipping your order to you soon.";
-											$msg['class'] = 'success';
-
-														if($order -> get_status() !=='completed') {
-															update_post_meta( $order_id, 'paysolutions_tid', $tid );
-															if($order -> get_status() != 'processing')
-															{
-																	$order -> payment_complete();
-																	$order -> add_order_note('Paysolutions payment successful<br/>Paysolutions Ref Number: '.$_REQUEST['refno']);
-																	$woocommerce -> cart -> empty_cart();
-																	die(print_r($_REQUEST));
-
-															}	
-														}
-												
-										}
-										else
-										{
-												$msg['message'] = "Thank you for shopping with us. However, the transaction has been declined from Paysolutions.";
-												if ($order && $order -> get_status() !== 'completed')
-												{
-														$order -> set_status('failed');
-														$order -> add_order_note('Failed, Transaction Status: Failed, message: '.$msg['message']);
-												}
-										}
-								}
-							}
-
+						} else {
 							die(print_r($_REQUEST));
+						}
 
-							if($notify_request == true)
-								die('no need to redirect as this is push back request');
-
-							if ( function_exists( 'wc_add_notice' ) )
-							{
-									wc_add_notice( $msg['message'], $msg['class'] );
-
-							}
-							else
-							{
-									if($msg['class']=='success')
-									{
-											$woocommerce->add_message( $msg['message']);
-									}else
-									{
-											$woocommerce->add_error( $msg['message'] );
-									}
-									$woocommerce->set_messages();
-							}
-							if ($msg['class'] == 'success')
-							{
-									$redirect_url = $this->get_return_url( $order );
-									wp_redirect( $redirect_url );
-									exit;
-							}
-							else
-							{
-									wp_redirect( wc_get_checkout_url());
-									exit;
-							}
 					}
 					/**
 					 * Generate Paysolutions button link
