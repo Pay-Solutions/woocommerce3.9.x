@@ -293,7 +293,7 @@ Copyright: © 2020
 
 								$order -> payment_complete();
 								$order -> add_order_note('Paysolutions payment successful<br/>Paysolutions Ref Number: '.$_REQUEST['refno']);
-								$woocommerce -> cart -> empty_cart();
+								WC()->cart->empty_cart();
 								die(print_r($_REQUEST));
 	
 
@@ -369,7 +369,7 @@ Copyright: © 2020
 			add_filter('woocommerce_payment_gateways', 'woocommerce_add_amdev_paysolutions_gateway' );
 	}
 	
-	function getHash($aba_paysolutions_merchant_id, $aba_paysolutions_api_key, $transactionId, $amount = '') {
-		$hash = base64_encode(hash_hmac('sha512', $aba_paysolutions_merchant_id . $transactionId . $amount, $aba_paysolutions_api_key, true));
+	function getHash($paysolutions_merchant_id, $paysolutions_api_key, $transactionId, $amount = '') {
+		$hash = base64_encode(hash_hmac('sha512', $paysolutions_merchant_id . $transactionId . $amount, $paysolutions_api_key, true));
 		return $hash;
 	}
