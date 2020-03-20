@@ -293,7 +293,7 @@ Copyright: © 2020
 
 								$order -> payment_complete();
 								$order -> add_order_note('Paysolutions payment successful<br/>Paysolutions Ref Number: '.$_REQUEST['refno']);
-								$woocommerce -> cart -> empty_cart();
+								WC() -> cart -> empty_cart();
 								die(print_r($_REQUEST));
 	
 
