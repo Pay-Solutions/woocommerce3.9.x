@@ -294,15 +294,14 @@ Copyright: © 2020
 								$order -> payment_complete();
 								$order -> add_order_note('Paysolutions payment successful<br/>Paysolutions Ref Number: '.$_REQUEST['refno']);
 								WC()->cart->empty_cart();
-								die(print_r($_REQUEST));
+								die('SUCCESS:'.print_r($_REQUEST));
 	
-
 							} else {
-								die(print_r($_REQUEST));
+								die('ERROR:'.print_r($_REQUEST));
 							}
 
 						} else {
-							die(print_r($_REQUEST));
+							die('ERROR-NOTFOUND:'.print_r($_REQUEST));
 						}
 
 					}
@@ -319,14 +318,25 @@ Copyright: © 2020
 							$the_currency = get_woocommerce_currency();
 							$the_order_total = $order->get_total();
 							//$hash	= getHash($this->merchantId, $this->merchantkey, $order_id, $the_order_total);
-							$description = get_bloginfo( 'name' ) . ' - ' . $order->get_id();
 
-							$customer_id = get_current_user_id();
-							$firstName = $order->get_billing_first_name();
-							$lastName = $order->get_billing_last_name();
-							$phone = $order->get_billing_phone();
-							$email = $order->get_billing_email();
+							$product_details = array();
+							$product_details[] = '#OrderID - ' . $order->get_id();
+
+							$order_items = $order->get_items();
+
+							foreach( $order_items as $product ) {
+								$product_details[] = $product['name'] ." x ". $product['qty'];
+							}
 							
+							//$description = get_bloginfo( 'name' ) . ' - ' . $order->get_id();
+
+							$product_description = implode( ", ", $product_details );
+
+							// $customer_id = get_current_user_id();
+							// $firstName = $order->get_billing_first_name();
+							// $lastName = $order->get_billing_last_name();
+							// $phone = $order->get_billing_phone();
+							$email = $order->get_billing_email();
 
 							$form = '
 									<form action="' . $this->redirecturl.'?lang=t" method="post" id="payment_method_paysolutions">
@@ -334,7 +344,7 @@ Copyright: © 2020
 
 									<input type="hidden" name="merchantid" value="'.$this->merchantId.'">
 									<input type="hidden" name="total" value="'.$the_order_total.'">
-									<input type="hidden" name="productdetail" value="'.$description.'">
+									<input type="hidden" name="productdetail" value="'.$product_description.'">
 									<input type="hidden" name="cc" value="'.$this->get_paysolutions_currency_code().'">
 									<input type="hidden" name="returnurl" value="'.$this->get_return_url( $order ).'">
 									<input type="hidden" name="customeremail" value="'.$email.'">
@@ -343,15 +353,12 @@ Copyright: © 2020
 									<input type="submit" class="button alt" id="checkout_button_nopopup" value="' . __( 'Pay Now', 'woocommerce' ) . '" /> 
 									<a class="button cancel" href="' . esc_url( $order->get_cancel_order_url() ) . '">' . __( 'Cancel order &amp; restore cart', 'woocommerce' ) . '</a>
 
-
 									</form>
-
 
 									<h5>with Credit/Debit Card</h5>
 									<img src="'.plugins_url( 'images/logo.png' , __FILE__ ).'" alt="Paysolutions" />
 									';
 
-							
 							return $form;
 					}
 			}
