@@ -16,3 +16,4 @@ Return URL : ระบุเว็บไซต์ที่งาน
 1.Title : ข้อความที่แสดงชื่อการชำระเงินในหน้าชำระเงิน</br>
 2.merchant Id : รหัสร้านค้าที่ได้จาก Paysolutions</br>
 3.Merchant API Name และ Key: ใช้ค่าเดียวกันกับ merchant Id แล้วกดปุ่ม Save changes
+4.เลือกหัวข้อ SandBox ออก
