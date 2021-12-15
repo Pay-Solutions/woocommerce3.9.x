@@ -1,8 +1,8 @@
 # woocommerce3.9.x
 
-<b>คู่มือการตั้งค่า Paysolutions Payment Gateway สำหรับ Woocommerce v3.8/3.9</b></br>
+<b>คู่มือการตั้งค่า Paysolutions Payment Gateway สำหรับ Woocommerce v3.8/3.9</b><br/>
 1.กำหนด Return parameter ใน https://controls.paysolutions.asia/</br>
-Post back URL : ให้ระบุค่า https://yoursite.com/?wc-api=WC_amdev_Paysolutions</br>
+Post back URL : ให้ระบุค่า https://yoursite.com/?wc-api=WC_amdev_Paysolutions<br/>
 โดยเปลี่ยน yoursite เป็นเว็บไซต์ที่ใช้งาน</br>
 Return URL : ระบุเว็บไซต์ที่งาน
 <img src='https://www.thaiepay.com/images/woo39/woo39-1.PNG' /> <br />
